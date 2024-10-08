@@ -1,0 +1,68 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <title>{{ movie.title }}</title>
+    <style>
+        .review {
+            display: flex;
+            align-items: center;
+            margin-bottom: 10px;
+        }
+        .review .reviewer {
+            font-weight: bold;
+            margin-right: 10px;
+        }
+        .review-text {
+            margin-left: 5px;
+        }
+        .review-form {
+            display: flex;
+            align-items: center;
+        }
+        .review-form label {
+            margin-right: 10px;
+            font-weight: bold;
+        }
+        textarea {
+            width: 500px; /* Adjust the width as needed */
+            height: 25px; /* Adjust the height as needed */
+            box-sizing: border-box;
+        }
+    </style>
+</head>
+<body>
+    <h1>{{ movie.title }}</h1>
+    <img src="{{ movie.poster.url }}" alt="{{ movie.title }}">
+    <p>{{ movie.description }}</p>
+    <p><strong>Director:</strong> {{ movie.director }}</p>
+    <p><strong>Main Actors:</strong> {{ movie.main_actors }}</p>
+    <p><strong>Year of Release:</strong> {{ movie.year_of_release }}</p>
+
+    <h2>Reviews</h2>
+    {% if reviews %}
+        <div>
+            {% for review in reviews %}
+                <div class="review">
+                    <span class="reviewer">{{ review.reviewer.username }}:</span>
+                    <span class="review-text">{{ review.text }}</span>
+                </div>
+            {% endfor %}
+        </div>
+    {% else %}
+        <p>No reviews available for this movie.</p>
+    {% endif %}
+
+    {% if user.is_authenticated %}
+        <!-- Form to add a review -->
+        <h2>Add a Review</h2>
+        <form method="post" action="{% url 'add_review' movie.id %}" class="review-form">
+            {% csrf_token %}
+            <label for="review">Review:</label>
+            <textarea id="review" name="text" rows="1" placeholder="Write your review here..."></textarea>
+            <input type="submit" value="Submit Review">
+        </form>
+    {% else %}
+        <p>You need to <a href="{% url 'login' %}?next={% url 'movie_detail' movie.id %}">login</a> to add a review.</p>
+    {% endif %}
+</body>
+</html>

@@ -1,0 +1,31 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <title>Movies</title>
+</head>
+<body>
+<div class="header">
+    <div>
+        {% if user.is_authenticated %}
+            <span>Hello, {{ user.username }}!</span>
+            <!-- טופס התנתקות -->
+            <form action="{% url 'logout' %}" method="post" style="display: inline;">
+                {% csrf_token %}
+                <button type="submit">Logout</button>
+            </form>
+        {% else %}
+            <a href="{% url 'login' %}">Login</a>
+            <a href="{% url 'signup' %}">Signup</a> <!-- קישור ל-signup -->
+        {% endif %}
+    </div>
+</div>
+<h1>Movies</h1>
+<div>
+    {% for movie in movies %}
+        <a href="{% url 'movie_detail' movie.id %}">
+            <img src="{{ movie.poster.url }}" alt="{{ movie.title }}">
+        </a>
+    {% endfor %}
+</div>
+</body>
+</html>
